@@ -36,9 +36,12 @@ const Form = () => {
       setImageUrl(sanityImageUrl); // Set the Sanity image URL to state
 
       // Send the Sanity image URL to FastAPI backend for prediction
-      const response = await axios.post("http://127.0.0.1:8000/predict/", {
-        imageUrl: sanityImageUrl,
-      });
+      const response = await axios.post(
+        "https://deep-fake-detection-backend.onrender.com/predict/",
+        {
+          imageUrl: sanityImageUrl,
+        }
+      );
 
       // Extract the prediction result from the backend response
       const { prediction } = response.data;
