@@ -20,7 +20,7 @@ const NavBar = () => {
     navigate("/");
   };
 
-  const handleMultipleClick = (index) => {
+  const handleMultipleClick = (index: number) => {
     if (index == 0) navigate("/predict");
   };
 
