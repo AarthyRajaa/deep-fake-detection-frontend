@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import client from "../../client";
 
 const Form = () => {
   const [file, setFile] = useState<File | null>(null); // Store the file
   const [prediction, setPrediction] = useState<string | null>(null); // Store the prediction result
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -25,26 +27,25 @@ const Form = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("image", file);
-
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/predict",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // Upload file to Sanity CDN
+      const sanityResponse = await client.assets.upload("image", file);
 
-      // Extract the prediction from the response
+      // Get the uploaded file's URL from Sanity
+      const sanityImageUrl = sanityResponse.url;
+      setImageUrl(sanityImageUrl); // Set the Sanity image URL to state
+
+      // Send the Sanity image URL to FastAPI backend for prediction
+      const response = await axios.post("http://127.0.0.1:8000/predict/", {
+        imageUrl: sanityImageUrl,
+      });
+
+      // Extract the prediction result from the backend response
       const { prediction } = response.data;
-      setPrediction(prediction); // Set the prediction result
+      setPrediction(prediction); // Set the prediction result to state
     } catch (error) {
-      console.error("Error uploading the image:", error);
-      alert("Failed to upload the image or receive prediction.");
+      console.error("Error during prediction:", error);
+      alert("Failed to predict.");
     }
   };
 
