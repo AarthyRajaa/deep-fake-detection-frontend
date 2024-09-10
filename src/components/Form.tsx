@@ -6,7 +6,7 @@ const Form = () => {
   const [file, setFile] = useState<File | null>(null); // Store the file
   const [prediction, setPrediction] = useState<string | null>(null); // Store the prediction result
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [, setImageUrl] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
