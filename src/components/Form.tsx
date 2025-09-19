@@ -37,7 +37,7 @@ const Form = () => {
 
       // Send the Sanity image URL to FastAPI backend for prediction
       const response = await axios.post(
-        "https://deep-fake-detection-backend.onrender.com/predict/",
+        "https://deep-fake-detection-backend-e20x.onrender.com/predict/",
         {
           imageUrl: sanityImageUrl,
         }
